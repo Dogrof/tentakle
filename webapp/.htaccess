@@ -1,0 +1,5 @@
+DirectoryIndex index.php
+Order allow,deny
+Allow from All
+
+Require all granted
