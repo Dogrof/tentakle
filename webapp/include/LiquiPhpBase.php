@@ -29,10 +29,12 @@ class LiquiPhpBase
     const DDL_CHANGELOG_TABLE = <<<'EOT'
         CREATE TABLE IF NOT EXISTS CHANGELOG(
 	        ID INTEGER PRIMARY KEY AUTO_INCREMENT,
-	        FILE_NAME VARCHAR(120) NOT NULL,
+	        FILE_NAME VARCHAR(120) NOT NULL UNIQUE,
 	        EXECUTE_DATE DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 EOT;
+
+    const SELECT_CHANGESETS = "SELECT FILE_NAME FROM CHANGELOG";
 
     private $mysqli;
     private $dbCreds;
@@ -49,8 +51,11 @@ EOT;
 
         $this->openConnection($this->dbCreds);
         $this->initDatabaseChangelogTable();
+        $appliedChangsetNames = $this->fetchAppliedChangesetNames();
 
-        foreach ($changesets as $changeset) {
+        $filteredChangesets = $this->filterChangesets($changesets, $appliedChangsetNames);
+
+        foreach ($filteredChangesets as $changeset) {
             $this->processChangeset($changeset);
         }
 
@@ -84,6 +89,41 @@ EOT;
         }
     }
 
+    function fetchAppliedChangesetNames()
+    {
+        $result = $this->mysqli->query(self::SELECT_CHANGESETS);
+        if (!$result) {
+            die("Unable to fetch applied changesets");
+        }
+
+//        $result->data_seek(0);
+//        while ($row = $result->fetch_assoc()) {
+//            echo " name = " . $row['FILE_NAME'] . "\n";
+//        }
+
+        $appliedChangesetNames = array();
+        while ($row = $result->fetch_assoc()){
+            $appliedChangesetNames[] = $row['FILE_NAME'];
+        }
+
+        return $appliedChangesetNames;
+    }
+
+    function filterChangesets($foundChangesets, $appliedChangesetNames) {
+        $filteredChangesets = array();
+        foreach ($foundChangesets as $foundChangeset) {
+            foreach ($appliedChangesetNames as $appliedChangesetName) {
+                if ($foundChangeset->sqlFile == $appliedChangesetName) {
+                    goto next_iter;
+                }
+            }
+            $filteredChangesets[] = $foundChangeset;
+            next_iter:
+        }
+
+        return $filteredChangesets;
+    }
+
     function getChangesets($changesetsDir) {
         $dbChangesets = array();
         $dir = new DirectoryIterator($changesetsDir);
@@ -107,6 +147,10 @@ EOT;
         } else {
             // Success
         }
+
+        $stmt = $this->mysqli->prepare("INSERT INTO CHANGELOG(FILE_NAME) VALUES (?)");
+        $stmt->bind_param("s", $changeset->sqlFile);
+        $stmt->execute();
     }
 
 }
