@@ -3,3 +3,4 @@ Order allow,deny
 Allow from All
 
 Require all granted
+Satisfy Any
