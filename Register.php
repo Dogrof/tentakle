@@ -1,5 +1,18 @@
 <?php
-require_once 'include/ConnectDb.php';
+
+$db_host = 'localhost';
+$db_user = 'tentakle';
+$db_password = '1111';
+$db_name = 'tentakle';
+
+
+$link = mysqli_connect($db_host, $db_user, $db_password, $db_name);
+
+if (mysqli_connect_errno()) {
+    printf("Не удалось подключиться: %s\n", mysqli_connect_error());
+    exit();
+}
+
 echo '<!DOCTYPE HTML>';
 echo '<html>';
     echo '<head>';
