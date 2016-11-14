@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 $db_host = 'localhost';
 $db_user = 'tentakle';
 $db_password = '1111';
