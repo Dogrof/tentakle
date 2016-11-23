@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Администратор
- * Date: 12.11.2016
- * Time: 16:55
- */
-header('Content-Type: text/html; charset= utf-8');
 $db_host = 'localhost';
 $db_user = 'tentakle';
 $db_password = '1111';
@@ -19,11 +12,33 @@ $LName = $_REQUEST['LName'];
 $Pass = $_REQUEST['Pass'];
 $PassConf = $_REQUEST['PassConf'];
 
-$Result = mysqli_query($link, "INSERT INTO users (email, first_name, last_name) VALUES ('$Email', '$FName', '$LName')");
-if (!$Result)
-{
-    echo 'Не удалось отправить данные', mysqli_error($link);
-}
+$Result = mysqli_query($link, "SELECT COUNT(*) FROM users where email = '$Email'");
+    if($Result == 0) {
+        mysqli_free_result($result);
+
+        $Result = mysqli_query($link, "INSERT INTO users (email, first_name, last_name, pass) VALUES ('$Email', '$FName', '$LName', '$Pass')");
+            if (!$Result){
+                echo 'Не удалось отправить данные', mysqli_error($link);
+            }
+            if ($Result) {
+                echo '<h1 align="center"><font color="#08e8de" size="10">Вы успешно зарегестрировались</font></h1>';
+            }
+    }
+    else echo '<h1 align="center"><font color="#08e8de" size="10">Такой Email уже зарегестрирован</font></h1>';
 
 mysqli_close($link);
 ?>
+
+<!DOCTYPE>
+<html>
+    <head>
+        <title>Registration</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    </head>
+    <body background="source/img/Main.jpg">
+        <ul>
+        <li><p align="center"><a href="index.php"><font color="#ffb961" size="10">Главная</font></a></p></li>
+        <li><p align="center"><a href="Register.php"><font color="#ffb961" size="10">Вернуться</font></a></p></li>
+        </ul>
+    </body>
+</html>
