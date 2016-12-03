@@ -42,7 +42,7 @@ mysqli_close($link);
 <body background="source/img/Main.jpg">
 <ul>
     <li><p align="center"><a href="index.php"><font color="#ffb961" size="10">Главная</font></a></p></li>
-    <li><p align="center"><a href="Register.php"><font color="#ffb961" size="10">Вернуться</font></a></p></li>
+    <li><p align="center"><a href="Register.php"><font color="#ffb961" size="10">Вернутся</font></a></p></li>
 </ul>
 </body>
 </html>

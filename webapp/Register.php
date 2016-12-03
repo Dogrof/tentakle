@@ -8,7 +8,7 @@
     <body background="source/img/Main.jpg">
 		<h1 align ="Center"><font color="#08e8de" size="10">Введите свои данные ниже</font></h1>
 
-  	<form name = "Main" action = "RegisterForm.php" method = "post" onsubmit='return validateAll(this);'>
+  	<form name = "Main" action = "RegisterForm.php" method = "post" onsubmit='return validateAllRegister(this);'>
         <fieldset>
             <div class="RegisterForm">
                 <label for="Email"><font color="#ffb961" size="10">Email: </font></label>

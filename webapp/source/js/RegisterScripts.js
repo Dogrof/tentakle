@@ -1,4 +1,4 @@
-function validateAll(){
+function validateAllRegister(){
     var Pass = document.getElementById("Pass").value;
     var PassConf = document.getElementById("PassConf").value;
     var Email = document.getElementById("Email").value;
