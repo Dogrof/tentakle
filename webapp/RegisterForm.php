@@ -1,10 +1,8 @@
 <?php
-$db_host = 'localhost';
-$db_user = 'tentakle';
-$db_password = '1111';
-$db_name = 'tentakle';
 
-$link = mysqli_connect($db_host, $db_user, $db_password, $db_name);
+require_once 'include/dbHelper.php';
+
+$link = createMysqliConnection();
 
 $Email = $_REQUEST['Email'];
 $FName = $_REQUEST['FName'];

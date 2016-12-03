@@ -1,44 +1,41 @@
 
 <?php
+
+require_once 'include/Constants.php';
+require_once 'include/dbHelper.php';
+
 session_start();
-$db_host = 'localhost';
-$db_user = 'tentakle';
-$db_password = '1111';
-$db_name = 'tentakle';
-$link = mysqli_connect($db_host, $db_user, $db_password, $db_name);
 
-$Email = $_REQUEST['Email'];
-$Pass = $_REQUEST['Pass'];
-$Result = mysqli_query($link, "SELECT COUNT(*) as count FROM users where email = '$Email'");
-if (!$Result) {
-    die ($link->error);
+if (isset($_SESSION[SessionConstants::SESSION_USER_ID])) {
+    // User is already logged-in
+    header('Location: /Page.php');
 }
-if ($Result->fetch_assoc()['count'] == 1) {
-    mysqli_free_result($Result);
-    $Result = mysqli_query($link, "SELECT COUNT(*) as count FROM users where pass = '$Pass'");
 
-    if (!$Result) {
-        echo mysqli_error($link);
+if (isset($_REQUEST['Email']) && isset($_REQUEST['Pass'])) {
+
+    $Email = $_REQUEST['Email'];
+    $Pass = $_REQUEST['Pass'];
+
+    $connection = createMysqliConnection();
+
+    $result = $connection->query("SELECT id FROM users where email = '$Email' AND pass = '$Pass' ");
+    if (!$result) {
         die ($link->error);
     }
-        if ($Result->fetch_assoc()['count'] == 1) {
-            mysqli_free_result($Result);
-            $Result = mysqli_query($link, "SELECT id FROM users WHERE email = '$Email'");
-            if (!isset($_SESSION['ID'])) $_SESSION['ID']=$Result;
-            mysqli_free_result($Result);
-            header("Location: http://www.tentakle/webapp/Page.php");
-            exit();
-        }
-        else {
-            echo '<h1 align="center"><font color="#08e8de" size="10">Такой пользователь не зарегестрирован1</font></h1>';
-            mysqli_free_result($Result);
-        }
+
+    $userExists = false;
+    if ($result->num_rows > 0) {
+        $userExists = true;
+
+        $userId = $result->fetch_assoc()['id'];
+        $_SESSION[SessionConstants::SESSION_USER_ID] = $userId;
+        header('Location: /Page.php');
+    }
+
+    $connection->close();
+
 }
-else {
-    echo '<h1 align="center"><font color="#08e8de" size="10">Такой пользователь не зарегестрирован</font></h1>';
-    mysqli_free_result($Result);
-}
-mysqli_close($link);
+
 ?>
 
 <!DOCTYPE HTML>
@@ -49,6 +46,14 @@ mysqli_close($link);
 </head>
 <body background="source/img/Main.jpg">
 <h1 align ="Center"><font color="#08e8de" size="10">Введите свои данные ниже</font></h1>
+
+<?php
+if (isset($userExists) && (!$userExists)) {
+    ?>
+    <p>User with such login and password doesn't exist</p>
+    <?php
+}
+?>
 
 <form name = "Main" action = "" method = "post" onsubmit=''>
     <fieldset>
