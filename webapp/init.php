@@ -17,3 +17,4 @@ $liquibase = new LiquiPhpBase($dbCreds, DIR_SQLS);
 $liquibase->migrate();
 
 ?>
+

@@ -1,6 +1,6 @@
 <?php
 
-define('FILE_DB_CONF', 'conf/db.conf');
+define('FILE_DB_CONF', 'source/conf/db.conf');
 define('DIR_SQLS', 'db/ddl');
 
 define('PROP_HOST', 'host');

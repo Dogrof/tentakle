@@ -1,6 +1,4 @@
-
 <?php
-
 require_once 'include/Constants.php';
 require_once 'include/dbHelper.php';
 
@@ -26,7 +24,10 @@ if (isset($_REQUEST['Email']) && isset($_REQUEST['Pass'])) {
     $userExists = false;
     if ($result->num_rows > 0) {
         $userExists = true;
-
+        $userFname = $result->fetch_assoc()['first_name'];;
+        $_SESSION[SessionConstants::SESSION_USER_FName] = $userFname;
+        $userLname = $result->fetch_assoc()['last_name'];;
+        $_SESSION[SessionConstants::SESSION_USER_LName] = $userLname;
         $userId = $result->fetch_assoc()['id'];
         $_SESSION[SessionConstants::SESSION_USER_ID] = $userId;
         header('Location: /Page.php');
