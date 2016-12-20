@@ -18,5 +18,7 @@ $smarty->assign('userID', $userID);
 $smarty->assign('userFName', $userFName);
 $smarty->assign('userLName', $userLName);
 
+$smarty->display('Header.tpl');
 $smarty->display('Page.tpl');
+$smarty->display('Footer.tpl');
 ?>
